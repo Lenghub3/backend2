@@ -58,13 +58,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
 // Enable CORS for Express
-// app.use(
-//   cors({
-//     origin: "http://localhost:5173", // This should match the origin of your frontend
-//     methods: ["GET", "POST"],
-//     credentials: true,
-//   })
-// );
+app.use(cors);
 
 // Define routes
 app.use("/api/dialogflow", dialogflowRoutes);
