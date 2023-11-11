@@ -2,6 +2,8 @@ import express from "express";
 import mongoose from "mongoose";
 import cors from "cors";
 import dotenv from "dotenv";
+import path from "path"; // Import the 'path' module
+
 import dialogflowRoutes from "./routes/dialogflow.js";
 
 dotenv.config();
@@ -16,22 +18,24 @@ mongoose.connect(process.env.MONGO_URL, {
 });
 
 const db = mongoose.connection;
+
 db.on("error", (error) => {
   console.error("MongoDB connection error:", error);
 });
+
 db.once("open", () => {
   console.log("Connected to MongoDB");
 });
 
-// Enable CORS for all origins (use with caution)
-app.use(cors({ origin: '*' }));
+// Enable CORS for a specific origin
+app.use(cors({ origin: 'https://frontend-bot-seven.vercel.app' }));
 
 // Configure body parser (if you need it for other middleware)
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
-// Handle preflight requests
-app.options("/api/dialogflow/textQuery", cors());
+// Handle preflight requests for the specific route
+app.options("/api/dialogflow/textQuery", cors({ origin: 'https://frontend-bot-seven.vercel.app' }));
 
 // Define routes
 app.use("/api/dialogflow", dialogflowRoutes);
