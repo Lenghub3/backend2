@@ -1,5 +1,4 @@
 import express from "express";
-import path from "path";
 import mongoose from "mongoose";
 import cors from "cors";
 import dotenv from "dotenv";
@@ -24,25 +23,22 @@ db.once("open", () => {
   console.log("Connected to MongoDB");
 });
 
-// Enable CORS for Express
-app.use(cors({
-  origin: "https://frontend-bot-seven.vercel.app", // Replace with your frontend URL
-  methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
-  credentials: true,
-}));
+// Enable CORS for all origins (use with caution)
+app.use(cors({ origin: '*' }));
 
 // Configure body parser (if you need it for other middleware)
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
 // Handle preflight requests
-app.options("*", cors());
+app.options("/api/dialogflow/textQuery", cors());
 
 // Define routes
 app.use("/api/dialogflow", dialogflowRoutes);
 
 // Serve static files for production
 if (process.env.NODE_ENV === "production") {
+  // Adjust the static file path as needed
   app.use(express.static("client/build"));
 
   app.get("*", (req, res) => {
